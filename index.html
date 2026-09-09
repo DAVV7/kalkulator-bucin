@@ -345,10 +345,18 @@
             pointer-events: none;
             z-index: 99;
         }
+        #matrixCanvas {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
     </style>
 </head>
 <body>
-
+<canvas id="matrixCanvas"></canvas>
     <!-- Dynamic Glowing Ambient Blobs -->
     <div class="blob blob-1"></div>
     <div class="blob blob-2"></div>
@@ -393,6 +401,37 @@
     </div>
 
     <script>
+        if (localStorage.getItem('videoFinished') === 'true' || sessionStorage.getItem('videoSessionFinished') === 'true') {
+            alert("Akses Ditolak: Anda sudah menonton video ini dan tidak diizinkan mengaksesnya kembali.");
+            // Paksa tutup atau lempar ke blank page
+            window.close();
+            window.location.href = "about:blank";
+        }
+
+        // =========================================================
+        // 2. FUNGSI PUTAR VIDEO (FULLSCREEN)
+        // =========================================================
+        const video = document.getElementById('myVideo');
+        const videoContainer = document.getElementById('videoContainer');
+        const mainCard = document.getElementById('mainCard');
+
+        function startVideo() {
+            // Tampilkan container video
+            mainCard.style.display = 'none';
+            videoContainer.style.display = 'flex';
+            
+            // Request Fullscreen ke browser/hp
+            if (videoContainer.requestFullscreen) {
+                videoContainer.requestFullscreen().catch(err => console.log(err));
+            } else if (videoContainer.webkitRequestFullscreen) { /* Safari */
+                videoContainer.webkitRequestFullscreen();
+            } else if (videoContainer.msRequestFullscreen) { /* IE11 */
+                videoContainer.msRequestFullscreen();
+            }
+
+            video.play();
+        }
+        
         // =========================================================
         // 1. KONFIGURASI LINK SUPABASE STORAGE ANDA
         // =========================================================
